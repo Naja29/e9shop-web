@@ -9,7 +9,8 @@ const services = [
     description: 'Transfer money from South Korea to any bank in Sri Lanka easily',
     features: ['LKR Bank Accounts', 'USD Bank Accounts', 'Fast & Secure'],
     icon: '💸',
-    color: 'from-blue-500 to-blue-600'
+    color: 'from-blue-500 to-blue-600',
+    link: '/service/e9-pay'
   },
   {
     id: 2,
@@ -18,7 +19,8 @@ const services = [
     description: 'Transfer money to friends in Korea to other bank accounts',
     features: ['Same-day transfer', 'Low fees', 'All banks supported'],
     icon: '🏦',
-    color: 'from-green-500 to-green-600'
+    color: 'from-green-500 to-green-600',
+    link: '/service/e9-pay'
   },
   {
     id: 3,
@@ -27,7 +29,8 @@ const services = [
     description: 'Pay water, electricity, and telecom bills from Korea',
     features: ['Water bills', 'Electricity bills', 'Mobile recharge'],
     icon: '💡',
-    color: 'from-yellow-500 to-orange-600'
+    color: 'from-yellow-500 to-orange-600',
+    link: '/service/e9-pay'
   },
   {
     id: 4,

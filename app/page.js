@@ -6,7 +6,7 @@ import Testimonials from '@/components/home/Testimonials';
 
 export default function Home() {
   return (
-    <div>
+    <div className="bg-[#C1D7D8]">
       <Hero />
       <Categories />
       <ServicesGrid title="Featured Services" limit={8} />
