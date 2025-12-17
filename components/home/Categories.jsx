@@ -8,7 +8,8 @@ const categories = [
     icon: FiCreditCard, 
     badge: '', 
     color: 'bg-blue-100 text-blue-600',
-    description: 'Money transfer & bill payments'
+    description: 'Money transfer & bill payments',
+    link: '/service/e9-pay'
   },
   { 
     id: 2, 
@@ -16,7 +17,8 @@ const categories = [
     icon: FiBook, 
     badge: 'NEW', 
     color: 'bg-green-100 text-green-600',
-    description: 'Online courses about Korea'
+    description: 'Online courses about Korea',
+    link: '/service/sail-academy'
   },
   { 
     id: 3, 
@@ -24,7 +26,8 @@ const categories = [
     icon: FiAirplay, 
     badge: null, 
     color: 'bg-purple-100 text-purple-600',
-    description: 'Flight booking services'
+    description: 'Flight booking services',
+    link: '/service/air-tickets'
   },
   { 
     id: 4, 
@@ -32,7 +35,8 @@ const categories = [
     icon: FiShield, 
     badge: null, 
     color: 'bg-red-100 text-red-600',
-    description: 'Life, property & vehicle insurance'
+    description: 'Life, property & vehicle insurance',
+    link: '/service/insurance'
   },
   { 
     id: 5, 
@@ -40,7 +44,8 @@ const categories = [
     icon: FiFileText, 
     badge: '', 
     color: 'bg-yellow-100 text-yellow-600',
-    description: 'Student visa services'
+    description: 'Student visa services',
+    link: '/service/student-visa'
   },
   { 
     id: 6, 
@@ -48,7 +53,8 @@ const categories = [
     icon: FiTrendingUp, 
     badge: null, 
     color: 'bg-teal-100 text-teal-600',
-    description: 'Colombo stock market investment'
+    description: 'Colombo stock market investment',
+    link: '/service/stock-market'
   },
   { 
     id: 7, 
@@ -56,7 +62,8 @@ const categories = [
     icon: FiUsers, 
     badge: 'NEW', 
     color: 'bg-indigo-100 text-indigo-600',
-    description: 'Visa consultation & support'
+    description: 'Visa consultation & support',
+    link: '/service/visa-consultation'
   },
   { 
     id: 8, 
@@ -64,7 +71,8 @@ const categories = [
     icon: FiAlertCircle, 
     badge: null, 
     color: 'bg-orange-100 text-orange-600',
-    description: 'Legal consultation services'
+    description: 'Legal consultation services',
+    link: '/service/law-help'
   },
 ];
 
@@ -86,8 +94,8 @@ export default function Categories() {
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {categories.map((category) => (
             <Link
-              key={category.id}
-              href={`/category/${category.id}`}
+                key={category.id}
+                href={category.link}
               className="group"
             >
               <div className="bg-white border border-gray-200 rounded-2xl p-6 hover:shadow-xl transition-all hover:-translate-y-1 relative h-full">

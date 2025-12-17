@@ -39,7 +39,8 @@ const services = [
     description: 'Life, property, and vehicle insurance coverage',
     features: ['24/7 coverage', 'Accident compensation', 'Quick claims'],
     icon: '🛡️',
-    color: 'from-red-500 to-pink-600'
+    color: 'from-red-500 to-pink-600',
+    link: '/service/insurance'
   },
   {
     id: 5,
@@ -48,7 +49,8 @@ const services = [
     description: 'Expert visa consultation for all visa types in Korea',
     features: ['E7-4, F2, F5', 'D2, D4, D10', 'Citizenship'],
     icon: '📋',
-    color: 'from-purple-500 to-indigo-600'
+    color: 'from-purple-500 to-indigo-600',
+    link: '/service/visa-consultation'
   },
   {
     id: 6,
@@ -57,7 +59,8 @@ const services = [
     description: 'Invest in Colombo Stock Market from Korea',
     features: ['Real-time trading', 'Expert guidance', 'Secure platform'],
     icon: '📈',
-    color: 'from-teal-500 to-cyan-600'
+    color: 'from-teal-500 to-cyan-600',
+    link: '/service/stock-market'
   },
   {
     id: 7,
@@ -66,7 +69,8 @@ const services = [
     description: 'Book flights to Sri Lanka and worldwide destinations',
     features: ['Best prices', 'Easy booking', 'Customer support'],
     icon: '✈️',
-    color: 'from-sky-500 to-blue-600'
+    color: 'from-sky-500 to-blue-600',
+    link: '/service/air-tickets'
   },
   {
     id: 8,
@@ -75,7 +79,8 @@ const services = [
     description: 'Get legal advice for Sri Lanka from Korea',
     features: ['Marriage issues', 'Property disputes', 'General law'],
     icon: '⚖️',
-    color: 'from-amber-500 to-orange-600'
+    color: 'from-amber-500 to-orange-600',
+    link: '/service/law-help'
   },
 ];
 
@@ -96,7 +101,7 @@ export default function ServicesGrid({ title = "Our Services", limit = 8 }) {
           {displayedServices.map((service) => (
             <Link
               key={service.id}
-              href={`/service/${service.id}`}
+              href={service.link}
               className="group"
             >
               <div className="bg-white rounded-2xl overflow-hidden border border-gray-200 hover:shadow-2xl transition-all hover:-translate-y-2 h-full">
