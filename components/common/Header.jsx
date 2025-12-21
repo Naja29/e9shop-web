@@ -10,7 +10,7 @@ const servicesMenu = [
     name: 'E9 Pay Service', 
     href: '/service/e9-pay',
     items: [
-      { name: 'Foreign Money Transfer', href: '/service/foreign-transfer' },
+      { name: 'Foreign Transfer', href: '/service/foreign-transfer' },
       { name: 'Domestic Transfer', href: '/service/domestic-transfer' },
       { name: 'Bill Payments', href: '/service/bill-payments' },
       { name: 'Bank Account Opening', href: '/service/bank-account' },
