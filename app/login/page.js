@@ -3,22 +3,64 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { FiMail, FiLock, FiEye, FiEyeOff, FiUser } from 'react-icons/fi';
+import { FiMail, FiLock, FiEye, FiEyeOff } from 'react-icons/fi';
+import { signIn, signInWithGoogle, signInWithFacebook } from '@/lib/firebase/auth';
 
 export default function LoginPage() {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
   const [formData, setFormData] = useState({
     email: '',
     password: '',
     remember: false
   });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // For now, just navigate to home
-    // Later you'll connect this to Supabase
-    console.log('Login data:', formData);
+    setLoading(true);
+    setError('');
+
+    const { user, error: authError } = await signIn(formData.email, formData.password);
+
+    if (authError) {
+      setError(authError);
+      setLoading(false);
+      return;
+    }
+
+    // Redirect to home on success
+    router.push('/');
+  };
+
+  const handleGoogleSignIn = async () => {
+    setLoading(true);
+    setError('');
+
+    const { user, error: authError } = await signInWithGoogle();
+
+    if (authError) {
+      setError(authError);
+      setLoading(false);
+      return;
+    }
+
+    router.push('/');
+  };
+
+  const handleFacebookSignIn = async () => {
+    setLoading(true);
+    setError('');
+
+    const { user, error: authError } = await signInWithFacebook();
+
+    if (authError) {
+      setError(authError);
+      setLoading(false);
+      return;
+    }
+
     router.push('/');
   };
 
@@ -34,6 +76,12 @@ export default function LoginPage() {
 
         {/* Login Form */}
         <div className="bg-white rounded-2xl shadow-xl p-8">
+          {error && (
+            <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg">
+              {error}
+            </div>
+          )}
+
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Email Input */}
             <div>
@@ -51,6 +99,7 @@ export default function LoginPage() {
                   onChange={(e) => setFormData({...formData, email: e.target.value})}
                   className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors"
                   placeholder="your.email@example.com"
+                  disabled={loading}
                 />
               </div>
             </div>
@@ -71,11 +120,13 @@ export default function LoginPage() {
                   onChange={(e) => setFormData({...formData, password: e.target.value})}
                   className="block w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors"
                   placeholder="Enter your password"
+                  disabled={loading}
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                  disabled={loading}
                 >
                   {showPassword ? (
                     <FiEyeOff className="text-gray-400 hover:text-gray-600" size={20} />
@@ -95,6 +146,7 @@ export default function LoginPage() {
                   checked={formData.remember}
                   onChange={(e) => setFormData({...formData, remember: e.target.checked})}
                   className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                  disabled={loading}
                 />
                 <label htmlFor="remember" className="ml-2 block text-sm text-gray-700">
                   Remember me
@@ -108,9 +160,10 @@ export default function LoginPage() {
             {/* Login Button */}
             <button
               type="submit"
-              className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors shadow-lg hover:shadow-xl"
+              disabled={loading}
+              className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Login
+              {loading ? 'Logging in...' : 'Login'}
             </button>
           </form>
 
@@ -128,11 +181,19 @@ export default function LoginPage() {
 
           {/* Social Login Buttons */}
           <div className="grid grid-cols-2 gap-4">
-            <button className="flex items-center justify-center gap-2 px-4 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+            <button 
+              onClick={handleGoogleSignIn}
+              disabled={loading}
+              className="flex items-center justify-center gap-2 px-4 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
               <span className="text-xl">🔵</span>
               <span className="font-semibold text-gray-700">Google</span>
             </button>
-            <button className="flex items-center justify-center gap-2 px-4 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+            <button 
+              onClick={handleFacebookSignIn}
+              disabled={loading}
+              className="flex items-center justify-center gap-2 px-4 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
               <span className="text-xl">📘</span>
               <span className="font-semibold text-gray-700">Facebook</span>
             </button>

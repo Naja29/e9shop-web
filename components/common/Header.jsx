@@ -3,7 +3,10 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { FiSearch, FiShoppingCart, FiUser, FiMenu, FiX, FiHeart, FiChevronDown } from 'react-icons/fi';
+import { useRouter } from 'next/navigation';
+import { FiSearch, FiUser, FiMenu, FiX, FiChevronDown, FiLogOut, FiGrid } from 'react-icons/fi';
+import { useAuth } from '@/contexts/AuthContext';
+import { logOut } from '@/lib/firebase/auth';
 
 const servicesMenu = [
   { 
@@ -26,9 +29,21 @@ const servicesMenu = [
 ];
 
 export default function Header() {
+  const router = useRouter();
+  const { user, userData, loading } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [servicesDropdownOpen, setServicesDropdownOpen] = useState(false);
+  const [userDropdownOpen, setUserDropdownOpen] = useState(false);
+
+  const handleLogout = async () => {
+    await logOut();
+    setUserDropdownOpen(false);
+    router.push('/');
+  };
+
+  // Check if user is admin
+  const isAdmin = userData?.role === 'admin';
 
   return (
     <header className="bg-white shadow-sm sticky top-0 z-50">
@@ -51,10 +66,6 @@ export default function Header() {
                 fill
                 className="object-contain p-2"
               />
-            </div>
-            <div className="hidden sm:block">
-              {/* <div className="text-2xl font-bold text-blue-600">E9Shop</div>
-              <div className="text-xs text-gray-500">Your Trusted Partner</div> */}
             </div>
           </Link>
 
@@ -137,14 +148,87 @@ export default function Header() {
               <FiSearch size={24} />
             </button>
 
-            {/* Login/Register Button */}
-            <Link 
-              href="/login"
-              className="hidden md:flex items-center gap-2 bg-blue-600 text-white px-6 py-2 rounded-full font-semibold hover:bg-blue-700 transition-colors"
-            >
-              <FiUser size={18} />
-              Login
-            </Link>
+            {/* User Menu or Login Button */}
+            {!loading && (
+              <>
+                {user ? (
+                  // User is logged in (admin or regular user)
+                  <div 
+                    className="relative hidden md:block"
+                    onMouseEnter={() => setUserDropdownOpen(true)}
+                    onMouseLeave={() => setUserDropdownOpen(false)}
+                  >
+                    <button className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-full font-semibold hover:bg-blue-700 transition-colors">
+                      <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center text-blue-600 font-bold">
+                        {isAdmin ? '👑' : (userData?.name?.charAt(0) || user.email?.charAt(0) || 'U')}
+                      </div>
+                      <span className="hidden lg:inline">
+                        {isAdmin ? 'Admin' : (userData?.name || 'User')}
+                      </span>
+                      <FiChevronDown size={16} />
+                    </button>
+
+                    {userDropdownOpen && (
+                      <div className="absolute top-full right-0 mt-2 w-64 bg-white rounded-xl shadow-2xl border border-gray-100 py-2 animate-fadeIn">
+                        <div className="px-6 py-3 border-b border-gray-100">
+                          <p className="font-semibold text-gray-900">
+                            {isAdmin ? '👑 Admin' : (userData?.name || 'User')}
+                          </p>
+                          <p className="text-sm text-gray-600 truncate">{user.email}</p>
+                        </div>
+                        
+                        {isAdmin ? (
+                          <Link
+                            href="/admin"
+                            className="flex items-center gap-3 px-6 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors"
+                          >
+                            <FiGrid size={18} />
+                            Admin Panel
+                          </Link>
+                        ) : (
+                          <>
+                            <Link
+                              href="/dashboard"
+                              className="flex items-center gap-3 px-6 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors"
+                            >
+                              <FiGrid size={18} />
+                              Dashboard
+                            </Link>
+                            
+                            <Link
+                              href="/profile/edit"
+                              className="flex items-center gap-3 px-6 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors"
+                            >
+                              <FiUser size={18} />
+                              Edit Profile
+                            </Link>
+                          </>
+                        )}
+
+                        <div className="border-t border-gray-100 mt-2">
+                          <button
+                            onClick={handleLogout}
+                            className="flex items-center gap-3 w-full px-6 py-3 text-red-600 hover:bg-red-50 transition-colors"
+                          >
+                            <FiLogOut size={18} />
+                            Logout
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  // User is NOT logged in - Show login button
+                  <Link 
+                    href="/login"
+                    className="hidden md:flex items-center gap-2 bg-blue-600 text-white px-6 py-2 rounded-full font-semibold hover:bg-blue-700 transition-colors"
+                  >
+                    <FiUser size={18} />
+                    Login
+                  </Link>
+                )}
+              </>
+            )}
 
             {/* Mobile Menu Button */}
             <button
@@ -175,6 +259,51 @@ export default function Header() {
       {mobileMenuOpen && (
         <div className="lg:hidden bg-white border-t border-gray-200">
           <nav className="container mx-auto px-4 py-4 flex flex-col gap-2">
+            {/* User Info (Mobile) - For ALL logged in users */}
+            {user && (
+              <div className="bg-blue-50 rounded-lg p-4 mb-4">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-lg">
+                    {isAdmin ? '👑' : (userData?.name?.charAt(0) || user.email?.charAt(0) || 'U')}
+                  </div>
+                  <div>
+                    <p className="font-semibold text-gray-900">
+                      {isAdmin ? '👑 Admin' : (userData?.name || 'User')}
+                    </p>
+                    <p className="text-sm text-gray-600 truncate">{user.email}</p>
+                  </div>
+                </div>
+                <div className="flex gap-2">
+                  {isAdmin ? (
+                    <Link 
+                      href="/admin"
+                      className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-lg font-semibold hover:bg-blue-700 transition-colors text-center text-sm"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      Admin Panel
+                    </Link>
+                  ) : (
+                    <Link 
+                      href="/dashboard"
+                      className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-lg font-semibold hover:bg-blue-700 transition-colors text-center text-sm"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      Dashboard
+                    </Link>
+                  )}
+                  <button
+                    onClick={() => {
+                      handleLogout();
+                      setMobileMenuOpen(false);
+                    }}
+                    className="flex-1 bg-red-600 text-white py-2 px-4 rounded-lg font-semibold hover:bg-red-700 transition-colors text-center text-sm"
+                  >
+                    Logout
+                  </button>
+                </div>
+              </div>
+            )}
+
             <Link 
               href="/" 
               className="text-gray-700 hover:text-blue-600 hover:bg-blue-50 font-medium py-3 px-4 rounded-lg transition-colors"
@@ -217,12 +346,15 @@ export default function Header() {
               </Link>
             </div>
 
-            <Link 
-              href="/login"
-              className="bg-blue-600 text-white py-3 px-4 rounded-lg font-semibold hover:bg-blue-700 transition-colors text-center mt-4"
-            >
-              Login / Register
-            </Link>
+            {/* Login button for non-logged in users */}
+            {!user && (
+              <Link 
+                href="/login"
+                className="bg-blue-600 text-white py-3 px-4 rounded-lg font-semibold hover:bg-blue-700 transition-colors text-center mt-4"
+              >
+                Login / Register
+              </Link>
+            )}
           </nav>
         </div>
       )}
