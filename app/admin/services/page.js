@@ -184,7 +184,7 @@ export default function AdminServices() {
 
                     <div>
                       <label className="block text-sm font-semibold text-gray-700 mb-2">
-                        Price (KRW)
+                        Price (LKR)
                       </label>
                       <input
                         type="number"
@@ -302,7 +302,7 @@ export default function AdminServices() {
                     </p>
                     {service.price > 0 && (
                       <p className="text-sm text-gray-600">
-                        <span className="font-semibold">Price:</span> ₩{service.price.toLocaleString()}
+                        <span className="font-semibold">Price:</span> LKR{service.price.toLocaleString()}
                       </p>
                     )}
                     {service.features && service.features.length > 0 && (
