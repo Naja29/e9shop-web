@@ -85,7 +85,7 @@ export default function Categories() {
             <h2 className="text-3xl font-bold text-gray-900">Our Services</h2>
             <p className="text-gray-600 mt-2">Everything you need, all in one place</p>
           </div>
-          <Link href="/categories" className="text-blue-600 font-semibold hover:text-blue-700 flex items-center gap-2">
+          <Link href="/all-services" className="text-blue-600 font-semibold hover:text-blue-700 flex items-center gap-2">
             See All
             <span>→</span>
           </Link>

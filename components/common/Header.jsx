@@ -82,7 +82,10 @@ export default function Header() {
               onMouseLeave={() => setServicesDropdownOpen(false)}
             >
               <button className="text-gray-700 hover:text-blue-600 transition-colors font-medium flex items-center gap-1">
-                Services
+                <Link href="/all-services" className="text-gray-700 hover:text-blue-600 transition-colors font-medium">
+                  Services
+                </Link>
+                
                 <FiChevronDown size={16} />
               </button>
               
